@@ -1,6 +1,8 @@
 import torch
 from torch.utils.data import Dataset, DataLoader    
 import pandas as pd
+from datetime import datetime, timezone, timedelta
+import os
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -39,6 +41,7 @@ class Network(object):
             batch_size:int,
             lr:float,
             test_data:torch.tensor=None,
+            is_log=False
     ):
         """
         train_data:torch.tensor的结构如下
@@ -54,6 +57,8 @@ class Network(object):
         """
         n = len(train_data)
         train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
+        Loss = []
+        Accuracy = []
         for epoch in range(epochs):
             epoch_loss = 0.0
             batch_count = 0
@@ -65,12 +70,20 @@ class Network(object):
                 batch_count += 1
 
             avg_loss = epoch_loss / batch_count
+            Loss.append(avg_loss)
             print(f"Epoch {epoch + 1}: Loss = {avg_loss:.6f}", end="")
             
             if test_data:
-                self.evaluate(test_data, epoch)
+                accuracy = self.evaluate(test_data)
+                Accuracy.append(accuracy)
             else:
                 print()
+        
+        self.Loss = Loss
+        self.Accuracy = Accuracy
+        self.epochs = epochs
+        if is_log:
+            self.log()
 
     
     def update_parameter(self, datas, lr):
@@ -91,7 +104,6 @@ class Network(object):
             loss += ((y_onehot - self.feedforward(x)) ** 2).sum()
         loss = loss / (2.0 * n)
         
-
         loss.backward()
 
         with torch.no_grad():
@@ -103,7 +115,7 @@ class Network(object):
         return loss.item()
         
 
-    def evaluate(self, test_set, epoch):
+    def evaluate(self, test_set):
         n_test = len(test_set)
         current = 0
         test_loader = DataLoader(test_set, batch_size=1, shuffle=False)
@@ -118,6 +130,18 @@ class Network(object):
                 current += 1
         accuracy = current / n_test
         print(f", Accuracy = {accuracy:.4f}")
+        return accuracy
+
+    def log(self):
+        utc_plus_8 = timezone(timedelta(hours=8))
+        now_utc_8 = datetime.now(utc_plus_8)
+        formatted_time = now_utc_8.strftime('%Y-%m-%d %H:%M:%S UTC+8')
+        filename = f'{formatted_time}.txt'
+        logs_path = os.path.join("logs/", filename)
+        with open(logs_path, 'a') as file:
+            file.write(f"Training Time is {formatted_time}.\n")
+            for epoch in range(self.epochs):
+                file.write(f"Epoch {epoch} : Loss is {self.Loss[epoch]}, Accuracy is {self.Accuracy[epoch]}.\n")
 
 class LoadData(Dataset):
     def __init__(self, file_path):
@@ -138,4 +162,4 @@ if __name__ == '__main__':
     test_set = LoadData(test_data_path)
 
     net = Network([784, 64, 10])
-    net.SGD(train_data=train_set, epochs=30, batch_size=64, lr=5, test_data=test_set)
+    net.SGD(train_data=train_set, epochs=30, batch_size=64, lr=5, test_data=test_set, is_log=True)

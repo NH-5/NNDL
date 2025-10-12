@@ -6,6 +6,8 @@
 
 代码见'mnist.py'文件,数据集来自[这里](https://github.com/RethinkFun/DeepLearning/blob/master/chapter8/data/mnist.zip)
 
+可以保存每一次训练的时间和对应的损失函数及正确率的值在logs文件夹下的txt文件中.
+
 # 依赖
 
 项目基于python=3.15.5,pandas=2.3.3,pytorch=2.8.0+cu129实现.
