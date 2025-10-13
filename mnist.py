@@ -3,6 +3,7 @@ import pandas as pd
 from datetime import datetime, timezone, timedelta
 import os
 import dataLoader
+from notify import bark_send
 
 # 自动检测设备
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -120,6 +121,8 @@ class Network(object):
         if is_log:
             self.log()
 
+        return Loss, Accuracy
+
     # =============================
     # 参数更新（反向传播 + 手动SGD）
     # =============================
@@ -226,4 +229,5 @@ if __name__ == '__main__':
     net = Network([784, 64, 10])
 
     # ****** 关键改动：学习率降低为 0.1 （或 0.01 更安全） ******
-    net.SGD(train_data=train_loader, epochs=30, lr=3, test_data=test_loader, is_log=True)
+    loss, accuracy = net.SGD(train_data=train_loader, epochs=30, lr=3, test_data=test_loader, is_log=True)
+    bark_send("训练完成", f"训练结束！最终 Loss: {loss[-1]:.4f}, Accuracy: {accuracy[-1]:.4f}")
