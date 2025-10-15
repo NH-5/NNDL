@@ -3,14 +3,14 @@ import dataLoader
 from notify import bark_send
 from logs import write_logs as wl
 
-train_data_path = 'data/mnist/mnist_train.csv'
-test_data_path = 'data/mnist/mnist_test.csv'
+train_data_path = 'data/gameplay-images/train_data'
+test_data_path = 'data/gameplay-images/test_data'
 
 
 if __name__ == '__main__':
 
-    _, train_loader = dataLoader.LoadCSVData(train_data_path, batch_size=64, shuffle=True)
-    _, test_loader = dataLoader.LoadCSVData(test_data_path, batch_size=64, shuffle=False)
+    _, train_loader = dataLoader.PNGLoader(train_data_path, batch_size=64, shuffle=True)
+    _, test_loader = dataLoader.PNGLoader(test_data_path, batch_size=64, shuffle=False)
 
     net = FNNet([784, 64, 10])
 
