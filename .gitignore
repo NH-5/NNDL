@@ -1,6 +1,5 @@
-*.yml
 .vscode
 data
 logs
 __pycache__
-config.json
+.env
