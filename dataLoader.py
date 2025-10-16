@@ -47,7 +47,7 @@ def CSVLoader(path, batch_size=64, shuffle=True):
 
 class PNGDataSet(Dataset):
     """
-    当前所使用的数据集均为640*360的png图片(RGBA模式)
+    当前所使用的数据集均为640*360的png图片(RGB模式)
     """
     def __init__(self, path):
         """
@@ -75,13 +75,12 @@ class PNGDataSet(Dataset):
                     img = to_tensor(img)
                     labels.append(dict[game])
                     features.append(img)
-                    breakpoint()
         self.features = features
         self.labels = labels
 
 
     def __len__(self):
-        return len()
+        return len(self.features)
     
 
     def __getitem__(self, index):
@@ -94,4 +93,4 @@ def PNGLoader(path, batch_size=64, shuffle=False):
     return dataset, dataloader
 
 if __name__ == '__main__':
-    trainset = PNGDataSet('data/gameplay-images/train_data')
+    _, trainset = PNGLoader('data/gameplay-images/train_data')

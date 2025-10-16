@@ -6,7 +6,7 @@
 
 # 项目文件结构
 
-代码见`mnist.py`文件,数据集来自[这里](https://github.com/RethinkFun/DeepLearning/blob/master/chapter8/data/mnist.zip)
+数据集来自[这里](https://github.com/RethinkFun/DeepLearning/blob/master/chapter8/data/mnist.zip)
 
 可以保存每一次训练的时间和对应的损失函数及正确率的值在logs文件夹下的txt文件中.
 
