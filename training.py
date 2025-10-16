@@ -145,7 +145,7 @@ if __name__ == '__main__':
     
     # 可选：加载验证集
     try:
-        val_dataset, val_loader = PNGLoader('data/gameplay-images/val_data', 
+        val_dataset, val_loader = PNGLoader('data/gameplay-images/test_data', 
                                             batch_size=batch_size, shuffle=False)
     except:
         val_loader = None
