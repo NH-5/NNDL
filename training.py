@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from CNN import CNNet
-from FNN import FNNet
+from MLP import FNNet
 from dataLoader import PNGLoader
 from notify import bark_send as bs
 from logs import write_logs as wl

@@ -1,9 +1,8 @@
 import torch
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
+from torchvision.datasets import ImageFolder
 import pandas as pd
-from PIL import Image
-import os
 
 class CSVDataSet(Dataset):
     """
@@ -43,54 +42,15 @@ def CSVLoader(path, batch_size=64, shuffle=True):
 
         dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
         return dataset, dataloader
-
-
-class PNGDataSet(Dataset):
-    """
-    当前所使用的数据集均为640*360的png图片(RGB模式)
-    """
-    def __init__(self, path):
-        """
-        同一张图片对应于featurns[i],labels[i]
-        """
-        dict = {
-            "Among Us":torch.tensor([1,0,0,0,0,0,0,0,0,0],dtype=torch.int),
-            "Apex Legends":torch.tensor([0,1,0,0,0,0,0,0,0,0],dtype=torch.int),
-            "Fortnite":torch.tensor([0,0,1,0,0,0,0,0,0,0],dtype=torch.int),
-            "Forza Horizon":torch.tensor([0,0,0,1,0,0,0,0,0,0],dtype=torch.int),
-            "Free Fire":torch.tensor([0,0,0,0,1,0,0,0,0,0],dtype=torch.int),
-            "Genshin Impact":torch.tensor([0,0,0,0,0,1,0,0,0,0],dtype=torch.int),
-            "God of War":torch.tensor([0,0,0,0,0,0,1,0,0,0],dtype=torch.int),
-            "Minecraft":torch.tensor([0,0,0,0,0,0,0,1,0,0],dtype=torch.int),
-            "Roblox":torch.tensor([0,0,0,0,0,0,0,0,1,0],dtype=torch.int),
-            "Terraria":torch.tensor([0,0,0,0,0,0,0,0,0,1],dtype=torch.int)
-        }
-        labels = []
-        features = []
-        to_tensor = transforms.ToTensor()
-        for game in os.listdir(path):
-            game_path = os.path.join(path, game)
-            for imgname in os.listdir(game_path):
-                with Image.open(os.path.join(game_path, imgname)).convert('RGB') as img:
-                    img = to_tensor(img)
-                    labels.append(dict[game])
-                    features.append(img)
-        self.features = features
-        self.labels = labels
-
-
-    def __len__(self):
-        return len(self.features)
     
 
-    def __getitem__(self, index):
-         return self.features[index], self.labels[index]
-    
+def PNGLoader(trainpath, testpath, batch_size=64, shuffle=False):
+    transform = transforms.Compose(
+        transforms.ToTensor()
+    )
+    train_dataset = ImageFolder(root=trainpath, transform=transform)
+    test_dataset = ImageFolder(root=testpath, transform=transform)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=shuffle)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=shuffle)
+    return train_loader, test_loader
 
-def PNGLoader(path, batch_size=64, shuffle=False):
-    dataset = PNGDataSet(path)
-    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
-    return dataset, dataloader
-
-if __name__ == '__main__':
-    _, trainset = PNGLoader('data/gameplay-images/train_data')
