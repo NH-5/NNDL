@@ -45,12 +45,12 @@ def CSVLoader(path, batch_size=64, shuffle=True):
     
 
 def PNGLoader(trainpath, testpath, batch_size=64, shuffle=False):
-    transform = transforms.Compose(
+    transform = transforms.Compose([
         transforms.ToTensor()
-    )
+    ])
     train_dataset = ImageFolder(root=trainpath, transform=transform)
     test_dataset = ImageFolder(root=testpath, transform=transform)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=shuffle)
-    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=shuffle)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
     return train_loader, test_loader
 

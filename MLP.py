@@ -22,12 +22,12 @@ class FNNet(nn.Module):
         self.layers = nn.Sequential(*layers)
 
     def forward(self, x):
-        x = x.view(1,-1)
+        x = x.view(x.size(0),-1)
         return self.layers(x)
     
 
 if __name__ == '__main__':
-    """调试测试用"""
+    """调试用"""
     input = torch.tensor([1.0,2.0,3.0],requires_grad=True)
     net = FNNet([3,2,3,1])
     output = net(input)
