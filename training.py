@@ -92,7 +92,7 @@ if __name__ == '__main__':
     trainloader, testloader = pngl(
         trainpath=trainpath,
         testpath=testpath,
-        batch_size=16,
+        batch_size=32,
         shuffle=True
     )
 

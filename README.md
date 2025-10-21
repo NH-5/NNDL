@@ -1,12 +1,12 @@
 # 概述
 
-本项目是一个全连接神经网络的项目,实现了手写数字识别的功能.
-
-所使用的损失函数为均方误差函数或交叉熵损失函数.
+本项目是一个神经网络的项目,可以用于Mnist的手写数字识别,也可用于图像分类.
 
 # 项目文件结构
 
-数据集来自[这里](https://github.com/RethinkFun/DeepLearning/blob/master/chapter8/data/mnist.zip)
+Mnist数据集来自[这里](https://github.com/RethinkFun/DeepLearning/blob/master/chapter8/data/mnist.zip)
+
+图像分类的数据集来自[开源数据集](https://www.kaggle.com/datasets/aditmagotra/gameplay-images)
 
 可以保存每一次训练的时间和对应的损失函数及正确率的值在logs文件夹下的txt文件中.
 
@@ -20,12 +20,18 @@
 
 # 模型效果
 
-训练30轮,batch_size=64的情况:
+对于Mnist,采用全连接网络,训练30轮,batch_size=64的情况:
 
     当使用均方误差函数,学习率设置3左右.在测试数据集上最终能达到接近95%的正确率.
 
     当使用交叉熵损失函数时,学习率设置0.01.在测试数据集上最终能达到88.97%的正确率.
 
+
+对于分类数据集,使用类似LeNet的网络,CNN+MLP的结构:
+
+    batch_size设置16时accuracy仅为10%.
+
+    batch_size设置32时accuracy可以达到95%.
 
 # 结果复现
 
@@ -36,4 +42,4 @@
 
 # 注意事项
 
-- 当前仅对所提供链接处下载的CSV数据集做过测试,确认代码能够运行
+- 当前仅对所提供链接处下载的数据集做过测试,确认代码能够运行
