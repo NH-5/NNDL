@@ -89,10 +89,12 @@ if __name__ == '__main__':
     trainpath = 'data/gameplay-images/train_data'
     testpath = 'data/gameplay-images/test_data'
 
+    batch_size = 32
+
     trainloader, testloader = pngl(
         trainpath=trainpath,
         testpath=testpath,
-        batch_size=32,
+        batch_size=batch_size,
         shuffle=True
     )
 
@@ -136,9 +138,6 @@ if __name__ == '__main__':
         accuracys.append(accuracy)
     
 
-    wl(losses, accuracys, epochs)
+    wl(losses, accuracys, epochs, batch_size, lr)
     bs('训练结束',f'Epoch {epochs} : loss {losses[-1]} accuracy {accuracys[-1]}.')
-
-
-
 
