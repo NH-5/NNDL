@@ -4,6 +4,7 @@ import torch.optim as optim
 from CNN import CNNet as cnet
 from MLP import FNNet as fnet
 from dataLoader import PNGLoader as pngl
+from hfdataloader import loader_hf_data as lhfd
 from notify import bark_send as bs
 from logs import write_logs as wl
 
@@ -91,17 +92,15 @@ if __name__ == '__main__':
 
     batch_size = 32
 
-    trainloader, testloader = pngl(
-        trainpath=trainpath,
-        testpath=testpath,
-        batch_size=batch_size,
-        shuffle=True
+    trainloader, testloader, _ = lhfd(
+        HFDataSet='ILSVRC/imagenet-1k',
+        batch_size=batch_size
     )
 
     model = Network(
-        size=[32,10],
+        size=[32,1000],
         input_channels=3,
-        input_size=(360,640),
+        input_size=(384,512),
         is_flatten=True
     )
 
