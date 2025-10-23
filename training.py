@@ -132,7 +132,7 @@ if __name__ == '__main__':
             testloader=testloader,
             device=device
         )
-        print(f"Epoch {epoch+1} : loss {loss} accuracy {accuracy}.\n")
+        print(f"Epoch {epoch+1} : loss {loss} accuracy {accuracy}.")
         losses.append(loss)
         accuracys.append(accuracy)
     
