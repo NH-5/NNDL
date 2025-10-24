@@ -4,7 +4,8 @@ import torch.optim as optim
 from CNN import CNNet as cnet
 from MLP import FNNet as fnet
 from dataLoader import PNGLoader as pngl
-from hfdataloader import loader_hf_data as lhfd
+from huggingface_dataloader import loader_hf_data as lhfd
+from modelscope_dataloader import loder_ms_data as lmsd
 from notify import bark_send as bs
 from logs import write_logs as wl
 
@@ -42,8 +43,8 @@ def train(model, trainloader, optimizer, criterion, device):
     correct = 0
     total = 0
     
-    for features, labels in trainloader:
-        features, labels = features.to(device), labels.to(device)
+    for batch in trainloader:
+        features, labels = batch['image:FILE'].to(device), batch['category'].to(device)
 
         optimizer.zero_grad()
         outputs = model(features)
@@ -68,8 +69,8 @@ def validate(model, testloader, device):
     total = 0
     
     with torch.no_grad():
-        for features, labels in testloader:
-            features, labels = features.to(device), labels.to(device)
+        for batch in testloader:
+            features, labels = batch['image:FILE'].to(device), batch['category'].to(device)
             
             
             outputs = model(features)
@@ -96,7 +97,7 @@ if __name__ == '__main__':
 
 
     model = Network(
-        size=[32,1000],
+        size=[32,100],
         input_channels=3,
         input_size=(384,512),
         is_flatten=True
@@ -107,10 +108,11 @@ if __name__ == '__main__':
         model = nn.DataParallel(model)
 
 
-    trainloader, testloader, _ = lhfd(
-        HFDataSet='ILSVRC/imagenet-1k',
+    trainloader, testloader = lmsd(
+        MSDataSet='tany0699/mini_imagenet100',
         batch_size=batch_size,
-        is_streaming=True
+        is_streaming=False,
+        shuffle=True
     )
 
     model = model.to(device)
