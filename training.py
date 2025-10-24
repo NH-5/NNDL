@@ -85,17 +85,15 @@ def validate(model, testloader, device):
 
 if __name__ == '__main__':
 
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
-    trainpath = 'data/gameplay-images/train_data'
-    testpath = 'data/gameplay-images/test_data'
-
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # 超参数
     batch_size = 32
+    epochs = 30
+    lr = 0.01
+    use_multi_gpu = False
+    losses = []
+    accuracys = []
 
-    trainloader, testloader, _ = lhfd(
-        HFDataSet='ILSVRC/imagenet-1k',
-        batch_size=batch_size
-    )
 
     model = Network(
         size=[32,1000],
@@ -104,14 +102,16 @@ if __name__ == '__main__':
         is_flatten=True
     )
 
-    epochs = 30
-    lr = 0.01
-    use_multi_gpu = False
-    losses = []
-    accuracys = []
-
     if use_multi_gpu and torch.cuda.device_count() > 1:
+        batch_size = batch_size * torch.cuda.device_count()
         model = nn.DataParallel(model)
+
+
+    trainloader, testloader, _ = lhfd(
+        HFDataSet='ILSVRC/imagenet-1k',
+        batch_size=batch_size,
+        is_streaming=True
+    )
 
     model = model.to(device)
 
