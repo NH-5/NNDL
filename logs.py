@@ -4,7 +4,7 @@ from datetime import datetime, timezone, timedelta
 def write_logs(Loss, Accuracy, epochs, batch_size, lr):
     utc_plus_8 = timezone(timedelta(hours=8))
     now_utc_8 = datetime.now(utc_plus_8)
-    formatted_time = now_utc_8.strftime('%Y-%m-%d_%H:%M:%S_UTC+8')
+    formatted_time = now_utc_8.strftime('%Y-%m-%d %H-%M-%S UTC+8')
 
     filename = f'{formatted_time}.txt'
     folderpath = 'logs/'
