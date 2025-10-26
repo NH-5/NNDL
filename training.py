@@ -8,6 +8,7 @@ from huggingface_dataloader import loader_hf_data as lhfd
 from modelscope_dataloader import loder_ms_data as lmsd
 from notify import bark_send as bs
 from logs import write_logs as wl
+import argparse
 
 
 class Network(nn.Module):
@@ -84,14 +85,29 @@ def validate(model, testloader, device):
     return acc
 
 
-if __name__ == '__main__':
+def get_args():
+    parser = argparse.ArgumentParser()
 
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    parser.add_argument('--lr', type = float, default= 1e-3)
+    parser.add_argument('--batch_size' , type = int, default= 16)
+    parser.add_argument('--epochs', type= int, default= 30)
+    parser.add_argument('--cpu', action='store_false', help='出现时为False,True时使用cuda,False时使用cpu')
+    parser.add_argument('--mutilgpu', action='store_true', help='是否使用多卡训练,出现时为True,True时使用多卡')
+    parser.add_argument('--streaming', type=bool, default=True, help='使用huggingface或modelscope接口加载数据集时是否流式传输')
+
+    return parser.parse_args()
+
+
+def main():
+
+    args = get_args()
+
+    device = torch.device('cuda' if torch.cuda.is_available() and args.cpu else 'cpu')
     # 超参数
-    batch_size = 16
-    epochs = 30
-    lr = 0.01
-    use_multi_gpu = False
+    batch_size = args.batch_size
+    epochs = args.epochs
+    lr = args.lr
+    use_multi_gpu = args.mutilgpu
     losses = []
     accuracys = []
 
@@ -111,7 +127,7 @@ if __name__ == '__main__':
     trainloader, testloader = lmsd(
         MSDataSet='tany0699/mini_imagenet100',
         batch_size=batch_size,
-        is_streaming=False,
+        is_streaming=args.streaming,
         shuffle=True
     )
 
@@ -142,3 +158,5 @@ if __name__ == '__main__':
     wl(losses, accuracys, epochs, batch_size, lr)
     bs('训练结束',f'Epoch {epochs} : loss {losses[-1]} accuracy {accuracys[-1]}.')
 
+if __name__ == '__main__':
+    main()
