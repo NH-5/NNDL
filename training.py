@@ -93,7 +93,7 @@ def get_args():
     parser.add_argument('--epochs', type= int, default= 30)
     parser.add_argument('--cpu', action='store_false', help='出现时为False,True时使用cuda,False时使用cpu')
     parser.add_argument('--mutilgpu', action='store_true', help='是否使用多卡训练,出现时为True,True时使用多卡')
-    parser.add_argument('--streaming', type=bool, default=True, help='使用huggingface或modelscope接口加载数据集时是否流式传输')
+    parser.add_argument('--streaming', action='store_true', help='使用huggingface或modelscope接口加载数据集时是否流式传输,出现时True表示使用流式传输')
 
     return parser.parse_args()
 
