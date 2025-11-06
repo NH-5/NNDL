@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from basic import BasicConvAvgPool
 
 
 class leNet(nn.Module):
@@ -18,39 +19,12 @@ class leNet(nn.Module):
         self.network()
 
     def network(self):
-        model = nn.ModuleList()
-        model.append(
-            nn.Conv2d(
-                in_channels=self.input_channels,
-                out_channels=6,
-                kernel_size=5,
-                stride=1
-            )
+        model = nn.Sequential(
+            BasicConvAvgPool(self.input_channels, 6, 5),
+            nn.ReLU(),
+            BasicConvAvgPool(6,16,5),
+            nn.ReLU()
         )
-        model.append(nn.ReLU())
-        model.append(
-            nn.AvgPool2d(
-                kernel_size=2,
-                stride=2
-            )
-        )
-        model.append(nn.ReLU())
-        model.append(
-            nn.Conv2d(
-                in_channels=6,
-                out_channels=16,
-                kernel_size=5,
-                stride=1
-            )
-        )
-        model.append(nn.ReLU())
-        model.append(
-            nn.AvgPool2d(
-                kernel_size=2,
-                stride=2
-            )
-        )
-        model.append(nn.ReLU())
         if self.is_flatten:
             model.append(nn.Flatten(start_dim=1))
         self.model = nn.Sequential(*model)
