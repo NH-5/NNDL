@@ -17,7 +17,7 @@ def write_logs(Loss, Accuracy, epochs, batch_size, lr):
         file.write(f"HyperParameter : batch_size {batch_size} lr {lr}\n")
         for epoch in range(epochs):
             file.write(
-                f"Epoch {epoch} : Loss is {Loss[epoch]}, Accuracy is {Accuracy[epoch]}.\n"
+                f"Epoch {epoch+1} : Loss is {Loss[epoch]}, Accuracy is {Accuracy[epoch]}.\n"
             )
 
     
