@@ -2,15 +2,15 @@ import torch
 import torch.nn as nn
 
 
-class CNNet(nn.Module):
+class leNet(nn.Module):
     """
-    仿LeNet-5结构
+    LeNet-5结构
     conv->pool->conv->pool
     采用ReLU作为激活函数
     """
     
     def __init__(self, input_channels=3, input_size = (360, 640), is_flatten = False):
-        super(CNNet, self).__init__()
+        super(leNet, self).__init__()
         
         self.input_channels = input_channels
         self.input_size = input_size
@@ -78,7 +78,7 @@ class CNNet(nn.Module):
 if __name__ == '__main__':
     """调试用"""
     input = torch.rand(2,2)
-    net = CNNet(input_channels=1, input_size=(100,100), is_flatten=True)
+    net = leNet(input_channels=1, input_size=(100,100), is_flatten=True)
     output_shape = net.get_output_shape()
     output_dim = net.get_flatten_dim()
     print(output_shape)

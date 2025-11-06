@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from CNN import CNNet as cnet
+from LeNet import leNet as lenet
 from MLP import FNNet as fnet
 from dataLoader import PNGLoader as pngl
 from huggingface_dataloader import loader_hf_data as lhfd
@@ -18,7 +18,7 @@ class Network(nn.Module):
             如[2,3,1]表示两个隐藏层2个神经元和3个神经元,1个输入层神经元
         """
         super().__init__()
-        cnn = cnet(
+        cnn = lenet(
             input_channels=input_channels,
             input_size=input_size,
             is_flatten=is_flatten
