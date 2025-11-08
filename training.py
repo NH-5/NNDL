@@ -3,8 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 from LeNet import leNet as lenet
 from MLP import FNNet as fnet
-from dataLoader import PNGLoader as pngl
-from huggingface_dataloader import loader_hf_data as lhfd
+from GoogLeNet import googleNet as gnet
 from modelscope_dataloader import loder_ms_data as lmsd
 from notify import bark_send as bs
 from logs import write_logs as wl
@@ -12,30 +11,22 @@ import argparse
 
 
 class Network(nn.Module):
-    def __init__(self, size, input_channels=3, input_size = (360, 640), is_flatten = False):
+    def __init__(self, size, input_channels=3, input_size = (360, 640)):
         """
         size:list表示fnn输入层外的部分,
             如[2,3,1]表示两个隐藏层2个神经元和3个神经元,1个输入层神经元
         """
         super().__init__()
-        cnn = lenet(
-            input_channels=input_channels,
-            input_size=input_size,
-            is_flatten=is_flatten
-        )
-        out_dim_of_cnn = cnn.get_flatten_dim()
+        cnn = gnet()
+        out_dim_of_cnn = cnn.get_flatten_dim(input_size)
         size_of_fnn = []
         size_of_fnn.append(out_dim_of_cnn)
         size_of_fnn.extend(size)
         fnn = fnet(size=size_of_fnn)
-
-        self.cnn = cnn
-        self.fnn = fnn
+        self.model = nn.Sequential(cnn, fnn)
 
     def forward(self, x):
-        x = self.cnn.forward(x)
-        x = self.fnn.forward(x)
-        return x
+        return self.model(x)
     
 
 def train(model, trainloader, optimizer, criterion, device):
@@ -115,8 +106,7 @@ def main():
     model = Network(
         size=[32,100],
         input_channels=3,
-        input_size=(384,512),
-        is_flatten=True
+        input_size=(224,224)
     )
 
     if use_multi_gpu and torch.cuda.device_count() > 1:

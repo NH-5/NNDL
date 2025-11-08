@@ -23,18 +23,18 @@ class Inception(nn.Module):
             分支3: input_channels-inchannel3-outchannel3
             分支4: input_channels-input_channels-outchannel4
         """
-        super(Inception).__init__()
+        super().__init__()
 
         self.branch1 = BasicConv2d(input_channels, outchannel1, 1)
 
         self.branch2 = nn.Sequential(
             BasicConv2d(input_channels, inchannel2, 1),
-            BasicConv2d(inchannel2, outchannel2, 3)
+            BasicConv2d(inchannel2, outchannel2, 3, padding=1)
         )
 
         self.branch3 = nn.Sequential(
             BasicConv2d(input_channels, inchannel3, 1),
-            BasicConv2d(inchannel3, outchannel3, 5)
+            BasicConv2d(inchannel3, outchannel3, 5, padding=2)
         )
 
         self.branch4 = nn.Sequential(

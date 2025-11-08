@@ -11,7 +11,7 @@ class leNet(nn.Module):
     """
     
     def __init__(self, input_channels=3, input_size = (360, 640), is_flatten = False):
-        super(leNet, self).__init__()
+        super().__init__()
         
         self.input_channels = input_channels
         self.input_size = input_size

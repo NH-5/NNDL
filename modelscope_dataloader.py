@@ -11,7 +11,7 @@ def preprocess(example):
     return example
 
 transform = tf.Compose([
-    tf.Resize((384,512)),
+    tf.Resize((224,224)),
     tf.ToTensor()
 ])
 
